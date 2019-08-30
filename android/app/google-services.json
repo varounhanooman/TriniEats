@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "503152023470",
+    "firebase_url": "https://trini-eats.firebaseio.com",
+    "project_id": "trini-eats",
+    "storage_bucket": "trini-eats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503152023470:android:21fb2b44f6063c5d",
+        "android_client_info": {
+          "package_name": "com.example.trini_eats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "503152023470-7hiaqh17hlq8bud6ar97o4tmsm71943a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSqED9g4Wluxus20-bgkBjvAB7UDOw998"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "503152023470-7hiaqh17hlq8bud6ar97o4tmsm71943a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "503152023470-s3upgkne9lk9o64j6n0rsbhhtl7jf7eb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.triniEats"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
