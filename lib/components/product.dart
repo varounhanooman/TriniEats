@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../pages/details.dart';
 
 class Product extends StatelessWidget {
-  const Product({Key key, this.image, this.title, this.group})
+  const Product({Key key, this.image, this.title, this.company})
       : super(key: key);
 
   final Image image;
   final String title;
-  final String group;
+  final String company;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class Product extends StatelessWidget {
             title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
           ),
-          Text(group),
+          Text(company),
           Container(
             height: 30.0,
           ),
