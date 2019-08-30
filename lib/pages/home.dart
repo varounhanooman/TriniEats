@@ -100,21 +100,22 @@ class Home extends StatelessWidget {
             ),
             SliverPadding(
               padding: EdgeInsets.all(15.0),
-              sliver: StreamBuilder(
+              sliver: StreamBuilder<QuerySnapshot>(
                   stream:
                       Firestore.instance.collection("Promotions").snapshots(),
-                  builder: (context, snapshot) => SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                        (context, index) => Product(
-                          title: snapshot.data.documents[index]['Title'],
-                          company: snapshot.data.documents[index]['Company'],
-                          image: Image.network(
-                            snapshot.data.documents[index]['Image'],
-                            fit: BoxFit.cover,
-                          ),
+                  builder: (context, snapshot) {
+                    return SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                      return Product(
+                        title: snapshot.data.documents[index]['Title'],
+                        company: snapshot.data.documents[index]['Company'],
+                        image: Image.network(
+                          snapshot.data.documents[index]['Image'],
+                          fit: BoxFit.cover,
                         ),
-                        childCount: snapshot.data.documents.length,
-                      ))),
+                      );
+                    }, childCount: snapshot.hasData ? snapshot.data.documents.length : 0,));
+                  }),
             ),
           ],
         ));
