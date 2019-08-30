@@ -5,7 +5,7 @@ class Product extends StatelessWidget {
   const Product({Key key, this.image, this.title, this.company})
       : super(key: key);
 
-  final Image image;
+  final Widget image;
   final String title;
   final String company;
 

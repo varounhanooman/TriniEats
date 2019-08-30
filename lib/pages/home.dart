@@ -105,16 +105,25 @@ class Home extends StatelessWidget {
                       Firestore.instance.collection("Promotions").snapshots(),
                   builder: (context, snapshot) {
                     return SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                      return Product(
-                        title: snapshot.data.documents[index]['Title'],
-                        company: snapshot.data.documents[index]['Company'],
-                        image: Image.network(
-                          snapshot.data.documents[index]['Image'],
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    }, childCount: snapshot.hasData ? snapshot.data.documents.length : 0,));
+                        delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Product(
+                          title: snapshot.data.documents[index]['Title'],
+                          company: snapshot.data.documents[index]['Company'],
+                          // image: Image.network(
+                          //   snapshot.data.documents[index]['Image'],
+                          //   fit: BoxFit.cover,
+                          image: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.easeIn,
+                            placeholder: 'assets/placeholder.png',
+                            image: snapshot.data.documents[index]['Image'],
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                      childCount:
+                          snapshot.hasData ? snapshot.data.documents.length : 0,
+                    ));
                   }),
             ),
           ],
@@ -124,9 +133,11 @@ class Home extends StatelessWidget {
   categoryFirestore(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.documents
         .map((doc) => new Tile(
-              image: Image.network(
-                doc["Image"],
-                fit: BoxFit.cover,
+              image: FadeInImage.assetNetwork(
+                fadeInCurve: Curves.easeIn,
+                placeholder: 'assets/placeholder.png',
+                image: doc['Image'],
+                fit: BoxFit.fill,
               ),
             ))
         .toList();

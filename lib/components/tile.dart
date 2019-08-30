@@ -4,7 +4,7 @@ import '../pages/details.dart';
 class Tile extends StatelessWidget {
   const Tile({Key key, this.image}) : super(key: key);
 
-  final Image image;
+  final Widget image;
 
   @override
   Widget build(BuildContext context) {
