@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/tile.dart';
-import '../components/rectangle.dart';
 import '../components/product.dart';
 
-import 'package:flutter/foundation.dart';
+import './login.dart';
+// import 'package:flutter/foundation.dart';
 
 class Home extends StatelessWidget {
   const Home({Key key}) : super(key: key);
@@ -46,8 +46,17 @@ class Home extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
+                            IconButton(
+                              color: Colors.blue,
+                              icon: Icon(Icons.account_circle),
+                              iconSize: 35.0,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()),
+                                );
+                              },
                             )
                           ],
                         ),
