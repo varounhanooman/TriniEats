@@ -6,6 +6,7 @@ import '../components/tile.dart';
 import '../components/product.dart';
 
 import './login.dart';
+import './map.dart';
 // import 'package:flutter/foundation.dart';
 
 class Home extends StatelessWidget {
@@ -76,10 +77,16 @@ class Home extends StatelessWidget {
                               ),
                             ),
                             IconButton(
-                              color: Colors.grey,
-                              icon: Icon(Icons.filter_list),
+                              color: Colors.blue,
+                              icon: Icon(Icons.pin_drop),
                               iconSize: 30.0,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Maps()),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -93,7 +100,10 @@ class Home extends StatelessWidget {
               child: Container(
                 height: 120,
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection("Category").snapshots(),
+                  stream: Firestore.instance
+                      .collection("Category")
+                      .orderBy("Order")
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return CircularProgressIndicator();
                     return Padding(
@@ -107,27 +117,56 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.star,
+                      size: 30.0,
+                    ),
+                    Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Restaurants',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 30.0),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
             SliverPadding(
               padding: EdgeInsets.all(15.0),
               sliver: StreamBuilder<QuerySnapshot>(
-                  stream:
-                      Firestore.instance.collection("Promotions").snapshots(),
+                  stream: Firestore.instance
+                      .collection("Promotions")
+                      .where('Display', isEqualTo: true)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     return SliverList(
                         delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return Product(
-                          title: snapshot.data.documents[index]['Title'],
-                          company: snapshot.data.documents[index]['Company'],
-                          // image: Image.network(
-                          //   snapshot.data.documents[index]['Image'],
-                          //   fit: BoxFit.cover,
-                          image: FadeInImage.assetNetwork(
-                            fadeInCurve: Curves.easeIn,
-                            placeholder: 'assets/placeholder.png',
-                            image: snapshot.data.documents[index]['Image'],
-                            fit: BoxFit.cover,
-                          ),
+                        return Column(
+                          children: <Widget>[
+                            Text(snapshot.data.documents[index]['Time']
+                                .toString()),
+                            Product(
+                              title: snapshot.data.documents[index]['Title'],
+                              company: snapshot.data.documents[index]
+                                  ['Company'],
+                              image: FadeInImage.assetNetwork(
+                                fadeInCurve: Curves.easeIn,
+                                placeholder: 'assets/placeholder.png',
+                                image: snapshot.data.documents[index]['Image'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         );
                       },
                       childCount:
@@ -135,6 +174,29 @@ class Home extends StatelessWidget {
                     ));
                   }),
             ),
+            // SliverToBoxAdapter(
+            //   child: Container(
+            //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
+            //     child: Row(
+            //       children: <Widget>[
+            //         Icon(
+            //           Icons.cake,
+            //           size: 30.0,
+            //         ),
+            //         Container(
+            //           child: Align(
+            //             alignment: Alignment.centerLeft,
+            //             child: Text(
+            //               'Eats',
+            //               style: TextStyle(
+            //                   fontWeight: FontWeight.bold, fontSize: 30.0),
+            //             ),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ));
   }
@@ -142,6 +204,7 @@ class Home extends StatelessWidget {
   categoryFirestore(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.documents
         .map((doc) => new Tile(
+              name: doc['Name'],
               image: FadeInImage.assetNetwork(
                 fadeInCurve: Curves.easeIn,
                 placeholder: 'assets/placeholder.png',

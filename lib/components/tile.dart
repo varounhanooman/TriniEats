@@ -1,10 +1,13 @@
+import 'dart:ui' as prefix0;
+
 import 'package:flutter/material.dart';
 import '../pages/details.dart';
 
 class Tile extends StatelessWidget {
-  const Tile({Key key, this.image}) : super(key: key);
+  const Tile({Key key, this.name, this.image}) : super(key: key);
 
   final Widget image;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,28 @@ class Tile extends StatelessWidget {
               child: image,
             ),
           ),
+          Positioned(
+              bottom: 5,
+              left: 5,
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(2.0, 2.0),
+                      blurRadius: 3.0,
+                      color: Colors.black,
+                    ),
+                    Shadow(
+                      offset: Offset(2.0, 2.0),
+                      blurRadius: 8.0,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
       onPressed: () {
