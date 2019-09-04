@@ -10,6 +10,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="trini_eats"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDSqED9g4Wluxus20-bgkBjvAB7UDOw998"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -24,8 +28,6 @@
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDSqED9g4Wluxus20-bgkBjvAB7UDOw998"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
