@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../pages/details.dart';
 
 class Product extends StatelessWidget {
-  const Product({Key key, this.image, this.title, this.company})
+  const Product({Key key, this.image, this.title, this.menu})
       : super(key: key);
 
   final Widget image;
   final String title;
-  final String company;
+  final Map menu;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class Product extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details()),
+          MaterialPageRoute(builder: (context) => Details(title: title, menu: menu,)),
         );
       },
       child: Column(
@@ -33,28 +33,28 @@ class Product extends StatelessWidget {
                   child: image,
                 ),
               ),
-              Positioned(
-                right: 10,
-                bottom: 10,
-                child: ClipRRect(
-                  borderRadius: new BorderRadius.circular(20.0),
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[Text('Around'), Text('40 mins')],
-                    ),
-                    height: 40,
-                    width: 80,
-                    color: Color(0xFFEAE8E8),
-                  ),
-                ),
-              )
+              // Positioned(
+              //   right: 10,
+              //   bottom: 10,
+              //   child: ClipRRect(
+              //     borderRadius: new BorderRadius.circular(20.0),
+              //     child: Container(
+              //       child: Column(
+              //         children: <Widget>[Text('Around'), Text('40 mins')],
+              //       ),
+              //       height: 40,
+              //       width: 80,
+              //       color: Color(0xFFEAE8E8),
+              //     ),
+              //   ),
+              // )
             ],
           ),
           Text(
             title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
           ),
-          Text(company),
+          // Text(company),
           Container(
             height: 30.0,
           ),

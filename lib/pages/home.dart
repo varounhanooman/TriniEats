@@ -102,10 +102,11 @@ class Home extends StatelessWidget {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
                       .collection("Category")
+                      // .where("Display", isEqualTo: "true")
                       .orderBy("Order")
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) return CircularProgressIndicator();
+                    if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                     return Padding(
                       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                       child: ListView(
@@ -144,21 +145,19 @@ class Home extends StatelessWidget {
               padding: EdgeInsets.all(15.0),
               sliver: StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
-                      .collection("Promotions")
+                      .collection("Merchant")
                       .where('Display', isEqualTo: true)
                       .snapshots(),
                   builder: (context, snapshot) {
                     return SliverList(
                         delegate: SliverChildBuilderDelegate(
                       (context, index) {
+                        // print(snapshot.data.documents[index]['Menu']);
                         return Column(
                           children: <Widget>[
-                            Text(snapshot.data.documents[index]['Time']
-                                .toString()),
                             Product(
-                              title: snapshot.data.documents[index]['Title'],
-                              company: snapshot.data.documents[index]
-                                  ['Company'],
+                              title: snapshot.data.documents[index]['Name'],
+                              menu: snapshot.data.documents[index]['Menu'],
                               image: FadeInImage.assetNetwork(
                                 fadeInCurve: Curves.easeIn,
                                 placeholder: 'assets/placeholder.png',
