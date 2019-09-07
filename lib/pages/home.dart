@@ -106,7 +106,8 @@ class Home extends StatelessWidget {
                       .orderBy("Order")
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                    if (!snapshot.hasData)
+                      return Center(child: CircularProgressIndicator());
                     return Padding(
                       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                       child: ListView(
@@ -149,15 +150,35 @@ class Home extends StatelessWidget {
                       .where('Display', isEqualTo: true)
                       .snapshots(),
                   builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
                     return SliverList(
                         delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        // print(snapshot.data.documents[index]['Menu']);
                         return Column(
                           children: <Widget>[
+                            //Trying to get subcollection
+
+                            // StreamBuilder<QuerySnapshot>(
+                            //   stream: Firestore.instance.collection('menu').snapshots(),
+                            //   builder: (context,snapshot){
+                            //     if(!snapshot.hasData){
+                            //       print('No data');
+                            //     }
+                            //     // else{
+                            //     //   print(snapshot.data.documents[index]['title']);
+                            //     // }
+                            //     print(snapshot.connectionState);
+                            //     return (Text('\$${snapshot.data.documents[0]}'));
+                            //   },
+
+                            // // ),
+                            // StreamBuilder<QuerySnapshot>(
+                            //   stream: ,
+                            // ),
                             Product(
                               title: snapshot.data.documents[index]['Name'],
-                              menu: snapshot.data.documents[index]['Menu'],
+                              docId: snapshot.data.documents[index].documentID.toString(),
                               image: FadeInImage.assetNetwork(
                                 fadeInCurve: Curves.easeIn,
                                 placeholder: 'assets/placeholder.png',

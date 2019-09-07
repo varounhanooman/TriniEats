@@ -1,43 +1,80 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/listItem.dart';
 
 class Menu {
-  final String title;
-  final String details;
-  final double price;
-  final List items;
+  String title;
+  String details;
+  int price;
+  String items;
 
-  Menu(this.title, this.details, this.price, this.items);
-
-  factory Menu.fromJson(Map<String, dynamic> parsedJson){
-    return Menu(
-      title: parsedJson['title'],
-      details: parsedJson['details'],
-      price: parsedJson['price'],
-      items: parsedJson['items']
-    );
+  Menu(Map<String, dynamic> data) {
+    title = data['title'];
+    details = data['details'];
+    price = data['price'];
+    items = data[items];
   }
 }
 
-
 class Details extends StatelessWidget {
-  const Details({Key key, this.title, this.menu}) : super(key: key);
+  const Details({Key key, this.title, this.docId, this.image})
+      : super(key: key);
 
-  final Map menu;
+  final String docId;
   final String title;
-
+  final Widget image;
 
   @override
   Widget build(BuildContext context) {
+    // var data = json.decode(json.encode(menu));
+    // var items = Menu(data);
+    // print('${items.items}');
+    // print(image);
     return Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(docId),
         ),
-        body: Center(
-          child: Text(menu.toString()),
-        ));
+        body: StreamBuilder<QuerySnapshot>(
+            stream: Firestore.instance
+                .collection("Merchant")
+                .document(docId)
+                .collection('menu')
+                .orderBy('details')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              return ListView.builder(
+                itemCount:
+                    snapshot.hasData ? snapshot.data.documents.length : 0,
+                itemBuilder: (context, index) {
+                  if(snapshot.hasData){
+                  return ListTile(
+                    title: Text(snapshot.data.documents[index]['title']),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        for (var item in (snapshot.data.documents[index]
+                            ['items']))
+                          Text(item)
+                      ],
+                    ),
+                    trailing: Text(
+                        snapshot.data.documents[index]['price'].toString()),
+                  );}else{
+                    return Center(child:Text('no data'));
+                  }
+                },
+              );
+            }));
   }
+}
+
+Widget getTextWidgets(List<String> strings) {
+  return new Row(children: strings.map((item) => new Text(item)).toList());
 }

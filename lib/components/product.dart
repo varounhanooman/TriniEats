@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../pages/details.dart';
 
 class Product extends StatelessWidget {
-  const Product({Key key, this.image, this.title, this.menu})
+  const Product({Key key, this.image, this.title, this.docId})
       : super(key: key);
 
   final Widget image;
   final String title;
-  final Map menu;
+  final String docId;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class Product extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details(title: title, menu: menu,)),
+          MaterialPageRoute(builder: (context) => Details(title: title, docId: docId, image:image)),
         );
       },
       child: Column(
