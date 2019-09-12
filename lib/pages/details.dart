@@ -1,157 +1,89 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/listItem.dart';
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-  @override
-  double get minExtent => minHeight;
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new SizedBox.expand(child: child);
-  }
+class Menu {
+  String title;
+  String details;
+  int price;
+  String items;
 
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
+  Menu(Map<String, dynamic> data) {
+    title = data['title'];
+    details = data['details'];
+    price = data['price'];
+    items = data[items];
   }
-}
-
-SliverPersistentHeader makeHeader(String headerText) {
-  return SliverPersistentHeader(
-    pinned: true,
-    delegate: _SliverAppBarDelegate(
-      minHeight: 40.0,
-      maxHeight: 40.0,
-      child: Container(
-          color: Colors.grey[200], child: Center(child: Text(headerText, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),))),
-    ),
-  );
 }
 
 class Details extends StatelessWidget {
-  const Details({Key key}) : super(key: key);
+  const Details({Key key, this.title, this.docId, this.image})
+      : super(key: key);
+
+  final String docId;
+  final String title;
+  final Widget image;
 
   @override
   Widget build(BuildContext context) {
+    // var data = json.decode(json.encode(menu));
+    // var items = Menu(data);
+    // print('${items.items}');
+    // print(image);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Subway'),
-      ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Column(
-                children: <Widget>[
-                  Container(
-                    child: Image.asset('assets/products/daymeal.jpg'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 15.0, right: 15.0, bottom: 0.0, top: 10.0),
-                    child: Column(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                child: Text(
-                                  'Subway - Arouca',
-                                  style: TextStyle(
-                                      fontSize: 30.0,
-                                      fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: Text(docId),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+            stream: Firestore.instance
+                .collection("Merchant")
+                .document(docId)
+                .collection('menu')
+                .snapshots(),
+            builder: (context, snapshot) {
+              // print(snapshot.data.documents[0].documentID);
+              print(snapshot.hasData);
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              return ListView.builder(
+                itemCount:
+                    snapshot.hasData ? snapshot.data.documents.length : 0,
+                itemBuilder: (context, index) {
+                  // var collection = snapshot.data.documents[index].data;
+                  // print(collection);
+                  if (snapshot.hasData) {
+                    return Card(
+                      child: FlatButton(
+                        onPressed: (){},
+                        child: ListTile(
+                          // leading: Image.network(snapshot.data.documents[index]['Image']),
+                          leading: FadeInImage.assetNetwork(
+                                  fadeInCurve: Curves.easeIn,
+                                  placeholder: 'assets/placeholder.png',
+                                  image: snapshot.data.documents[index]['Image'].toString(),
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.star,
-                                  size: 15.0,
-                                ),
-                                Text('4.3'),
-                                Text(' - Sandwiches, American'),
-                              ],
-                            ),
-                          ],
+                          title: Text(snapshot.data.documents[index]['Name'].toString()),
+                          subtitle: Text(snapshot.data.documents[index]['Items'].toString()),
+                          trailing: Text(snapshot.data.documents[index]['Price'].toString()),
+                          // dense: true,
                         ),
-                        Padding(padding: EdgeInsets.all(10.0)),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ]),
-          ),
-          makeHeader('6" Subs'),
-          SliverFixedExtentList(
-            itemExtent: 80.0,
-            delegate: SliverChildListDelegate(
-              [
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-              ],
-            ),
-          ),
-          makeHeader('12" Subs'),
-          SliverFixedExtentList(
-            itemExtent: 80.0,
-            delegate: SliverChildListDelegate(
-              [
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-              ],
-            ),
-          ),
-          makeHeader('Signature Wraps'),
-          SliverFixedExtentList(
-            itemExtent: 80.0,
-            delegate: SliverChildListDelegate(
-              [
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-              ],
-            ),
-          ),
-          makeHeader('Salads'),
-          SliverFixedExtentList(
-            itemExtent: 80.0,
-            delegate: SliverChildListDelegate(
-              [
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-                Item(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                      ),
+                    );
+                  } else {
+                    return Center(child: Text('no data'));
+                  }
+                },
+              );
+            }));
   }
+}
+
+Widget getTextWidgets(List<String> strings) {
+  return new Row(children: strings.map((item) => new Text(item)).toList());
 }

@@ -1,202 +1,237 @@
 import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/tile.dart';
-import '../components/rectangle.dart';
 import '../components/product.dart';
 
-import 'package:flutter/foundation.dart';
+import './login.dart';
+import './map.dart';
+// import 'package:flutter/foundation.dart';
 
 class Home extends StatelessWidget {
   const Home({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Trini Eats',
-          style: TextStyle(fontSize: 30.0),
-          textAlign: TextAlign.start,
+        appBar: AppBar(
+          title: Text(
+            'Trini Eats',
+            style: TextStyle(fontSize: 30.0),
+            textAlign: TextAlign.start,
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-            left: 15.0, right: 15.0, bottom: 0.0, top: 10.0),
-        child: CustomScrollView(
+        body: CustomScrollView(
           slivers: <Widget>[
-            //Top Row
+            // //Top Row
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
                           children: <Widget>[
-                            Text('Deliver now'),
-                            Text(
-                              'Select Location',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('Deliver now'),
+                                  Text(
+                                    'Select Location',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.blue,
+                              icon: Icon(Icons.account_circle),
+                              iconSize: 35.0,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()),
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                      fillColor: Colors.grey,
+                                      filled: true,
+                                      border: InputBorder.none,
+                                      labelText:
+                                          'Dishes, restaruants and cuisines'),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.blue,
+                              icon: Icon(Icons.pin_drop),
+                              iconSize: 30.0,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Maps()),
+                                );
+                              },
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                height: 120,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance
+                      .collection("Category")
+                      // .where("Display", isEqualTo: "true")
+                      .orderBy("Order")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return Center(child: CircularProgressIndicator());
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: categoryFirestore(snapshot),
                       ),
-                      CircleAvatar(
-                        backgroundColor: Colors.grey,
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5.0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                                fillColor: Colors.grey,
-                                filled: true,
-                                border: InputBorder.none,
-                                labelText: 'Dishes, restaruants and cuisines'),
-                          ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.star,
+                      size: 30.0,
+                    ),
+                    Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Restaurants',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 30.0),
                         ),
                       ),
-                      IconButton(
-                        color: Colors.grey,
-                        icon: Icon(Icons.filter_list),
-                        iconSize: 30.0,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // TileSection
-            /****************************** CATEGORIES   ****************/
-            SliverToBoxAdapter(
-              child: Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  height: 120,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      Tile(image: Image.asset('assets/categories/kfc.png')),
-                      Tile(
-                          image:
-                              Image.asset('assets/categories/PizzaBoys.jpg')),
-                      Tile(
-                          image:
-                              Image.asset('assets/categories/PizzaHut.jpeg')),
-                      Tile(image: Image.asset('assets/categories/Subway.png')),
-                      Tile(
-                          image:
-                              Image.asset('assets/categories/RoyalCastle.jpg')),
-                    ],
-                  )),
-            ),
-            // Title
-            //***************************    TOP RATED   *****************************/
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text('Top Rated'),
+                    )
+                  ],
                 ),
-              ]),
-            ),
-            // Top Rated Section
-            SliverToBoxAdapter(
-              child: Container(
-                  height: 120,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      Rectangle(
-                          image: Image.asset('assets/top_rated/BigDeal.png')),
-                      Rectangle(
-                          image:
-                              Image.asset('assets/top_rated/DoubleDeal.png')),
-                      Rectangle(
-                          image: Image.asset(
-                              'assets/top_rated/GoldenNuggets.jpg')),
-                      Rectangle(
-                          image:
-                              Image.asset('assets/top_rated/RoyalWings.jpg')),
-                    ],
-                  )),
-            ),
-            // List
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Product(
-                      title: 'Monday Meal',
-                      group: 'Subway',
-                      image: Image.asset(
-                        'assets/products/daymeal.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Product(
-                      title: '5 Flavour Meal',
-                      group: 'Pizza Hut',
-                      image: Image.asset(
-                        'assets/products/5flavour.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Product(
-                      title: 'Grand Opening',
-                      group: 'Pizza Hut',
-                      image: Image.asset(
-                        'assets/products/Couva.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Product(
-                      title: 'Big Meal',
-                      group: 'KFC',
-                      image: Image.asset(
-                        'assets/products/KFCMeal.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Product(
-                      title: 'Ultimate Box',
-                      group: 'Pizza Boys',
-                      image: Image.asset(
-                        'assets/products/UltimateBox.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
+            SliverPadding(
+              padding: EdgeInsets.all(15.0),
+              sliver: StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance
+                      .collection("Merchant")
+                      .where('Display', isEqualTo: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Column(
+                          children: <Widget>[
+                            //Trying to get subcollection
+
+                            // StreamBuilder<QuerySnapshot>(
+                            //   stream: Firestore.instance.collection('menu').snapshots(),
+                            //   builder: (context,snapshot){
+                            //     if(!snapshot.hasData){
+                            //       print('No data');
+                            //     }
+                            //     // else{
+                            //     //   print(snapshot.data.documents[index]['title']);
+                            //     // }
+                            //     print(snapshot.connectionState);
+                            //     return (Text('\$${snapshot.data.documents[0]}'));
+                            //   },
+
+                            // // ),
+                            // StreamBuilder<QuerySnapshot>(
+                            //   stream: ,
+                            // ),
+                            Product(
+                              title: snapshot.data.documents[index]['Name'],
+                              docId: snapshot.data.documents[index].documentID.toString(),
+                              image: FadeInImage.assetNetwork(
+                                fadeInCurve: Curves.easeIn,
+                                placeholder: 'assets/placeholder.png',
+                                image: snapshot.data.documents[index]['Image'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      childCount:
+                          snapshot.hasData ? snapshot.data.documents.length : 0,
+                    ));
+                  }),
+            ),
+            // SliverToBoxAdapter(
+            //   child: Container(
+            //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
+            //     child: Row(
+            //       children: <Widget>[
+            //         Icon(
+            //           Icons.cake,
+            //           size: 30.0,
+            //         ),
+            //         Container(
+            //           child: Align(
+            //             alignment: Alignment.centerLeft,
+            //             child: Text(
+            //               'Eats',
+            //               style: TextStyle(
+            //                   fontWeight: FontWeight.bold, fontSize: 30.0),
+            //             ),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 
-  Test() {
-    print('hello');
+  categoryFirestore(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data.documents
+        .map((doc) => new Tile(
+              name: doc['Name'],
+              image: FadeInImage.assetNetwork(
+                fadeInCurve: Curves.easeIn,
+                placeholder: 'assets/placeholder.png',
+                image: doc['Image'],
+                fit: BoxFit.fill,
+              ),
+            ))
+        .toList();
   }
 }
