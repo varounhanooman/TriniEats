@@ -5,7 +5,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../components/listItem.dart';
+import './menuitem.dart';
 
 class Menu {
   String title;
@@ -54,23 +54,29 @@ class Details extends StatelessWidget {
                 itemCount:
                     snapshot.hasData ? snapshot.data.documents.length : 0,
                 itemBuilder: (context, index) {
-                  // var collection = snapshot.data.documents[index].data;
+                  var collection = snapshot.data.documents[index].data;
                   // print(collection);
+                  var items = MenuItems.fromJson(collection);
                   if (snapshot.hasData) {
                     return Card(
                       child: FlatButton(
-                        onPressed: (){},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Item(
+                                    name: items.name,
+                                    price: items.price,
+                                    items: items.items,
+                                    image: items.image)),
+                          );
+                        },
                         child: ListTile(
                           // leading: Image.network(snapshot.data.documents[index]['Image']),
-                          leading: FadeInImage.assetNetwork(
-                                  fadeInCurve: Curves.easeIn,
-                                  placeholder: 'assets/placeholder.png',
-                                  image: snapshot.data.documents[index]['Image'].toString(),
-                                  fit: BoxFit.cover,
-                                ),
-                          title: Text(snapshot.data.documents[index]['Name'].toString()),
-                          subtitle: Text(snapshot.data.documents[index]['Items'].toString()),
-                          trailing: Text(snapshot.data.documents[index]['Price'].toString()),
+                          leading: items.image,
+                          title: Text(items.name),
+                          subtitle: Text(items.items.toString()),
+                          trailing: Text(items.price.toStringAsFixed(2)),
                           // dense: true,
                         ),
                       ),
@@ -86,4 +92,25 @@ class Details extends StatelessWidget {
 
 Widget getTextWidgets(List<String> strings) {
   return new Row(children: strings.map((item) => new Text(item)).toList());
+}
+
+class MenuItems {
+  String name;
+  String category;
+  num price;
+  List items;
+  Widget image;
+
+  MenuItems({this.category, this.image, this.items, this.price, this.name});
+  MenuItems.fromJson(Map<String, dynamic> data)
+      : name = data['Name'],
+        category = data['Category'],
+        price = data['Price'],
+        items = data['Items'],
+        image = FadeInImage.assetNetwork(
+          fadeInCurve: Curves.easeIn,
+          placeholder: 'assets/placeholder.png',
+          image: data['Image'],
+          fit: BoxFit.cover,
+        );
 }
