@@ -44,30 +44,39 @@ class Details extends StatelessWidget {
                 .collection("Merchant")
                 .document(docId)
                 .collection('menu')
-                .orderBy('details')
                 .snapshots(),
             builder: (context, snapshot) {
+              // print(snapshot.data.documents[0].documentID);
+              print(snapshot.hasData);
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
               return ListView.builder(
                 itemCount:
                     snapshot.hasData ? snapshot.data.documents.length : 0,
                 itemBuilder: (context, index) {
-                  if(snapshot.hasData){
-                  return ListTile(
-                    title: Text(snapshot.data.documents[index]['title']),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        for (var item in (snapshot.data.documents[index]
-                            ['items']))
-                          Text(item)
-                      ],
-                    ),
-                    trailing: Text(
-                        snapshot.data.documents[index]['price'].toString()),
-                  );}else{
-                    return Center(child:Text('no data'));
+                  // var collection = snapshot.data.documents[index].data;
+                  // print(collection);
+                  if (snapshot.hasData) {
+                    return Card(
+                      child: FlatButton(
+                        onPressed: (){},
+                        child: ListTile(
+                          // leading: Image.network(snapshot.data.documents[index]['Image']),
+                          leading: FadeInImage.assetNetwork(
+                                  fadeInCurve: Curves.easeIn,
+                                  placeholder: 'assets/placeholder.png',
+                                  image: snapshot.data.documents[index]['Image'].toString(),
+                                  fit: BoxFit.cover,
+                                ),
+                          title: Text(snapshot.data.documents[index]['Name'].toString()),
+                          subtitle: Text(snapshot.data.documents[index]['Items'].toString()),
+                          trailing: Text(snapshot.data.documents[index]['Price'].toString()),
+                          // dense: true,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(child: Text('no data'));
                   }
                 },
               );
