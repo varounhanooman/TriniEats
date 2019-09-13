@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 
-class Item extends StatelessWidget {
+class Item extends StatefulWidget {
   const Item({Key key, this.image, this.items, this.name, this.price})
       : super(key: key);
   final String name;
   final num price;
   final List items;
   final Widget image;
+  @override
+  MyItemState createState() {
+    return MyItemState();
+  }
+}
+
+class MyItemState extends State<Item> {
+  int counter = 1;
+
+  void plusButton() {
+    setState(() {
+      counter += 1;
+    });
+  }
+
+  void minusButton() {
+    setState(() {
+      if (counter == 1) {
+        counter = 1;
+      } else {
+        counter -= 1;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +44,8 @@ class Item extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              title: Text(name),
-              background: Opacity(opacity: 0.7, child: image),
+              title: Text(widget.name),
+              background: Opacity(opacity: 0.7, child: widget.image),
             ),
           )
         ];
@@ -37,14 +61,14 @@ class Item extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                         child: Text(
-                      name,
+                      widget.name,
                       style: TextStyle(fontSize: 20.0),
                     )),
                     Text('\$',
                         style: TextStyle(
                             fontSize: 30.0, fontWeight: FontWeight.bold)),
                     Text(
-                      price.toStringAsFixed(2),
+                      (widget.price * counter).toStringAsFixed(2),
                       style: TextStyle(
                           fontSize: 30.0, fontWeight: FontWeight.bold),
                     )
@@ -65,9 +89,9 @@ class Item extends StatelessWidget {
                     SizedBox(
                       height: 200,
                       child: ListView.builder(
-                        itemCount: items.length,
+                        itemCount: widget.items.length,
                         itemBuilder: (context, index) {
-                          return Text(items[index]);
+                          return Text(widget.items[index]);
                         },
                       ),
                     ),
@@ -80,16 +104,16 @@ class Item extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   IconButton(
-                    onPressed: () {},
+                    onPressed: minusButton,
                     icon: Icon(Icons.remove),
                   ),
                   Expanded(
                     child: Center(
-                      child: Text('1'),
+                      child: Text(counter.toString()),
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: plusButton,
                     icon: Icon(Icons.add),
                   ),
                 ],
@@ -97,27 +121,12 @@ class Item extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-              child: RaisedButton(child: Text('Add to Cart'), onPressed: (){},),
-            )
-            // Container(
-            //   margin: EdgeInsets.only(left: 50, right: 50, top: 20),
-            //   child: Row(
-            //     children: <Widget>[
-            //       FloatingActionButton(
-            //         child: Icon(Icons.remove),
-            //         onPressed: () {},
-            //       ),
-            //       Expanded(
-            //           child: Center(
-            //         child: Text('1'),
-            //       )),
-            //       FloatingActionButton(
-            //         child: Icon(Icons.add),
-            //         onPressed: () {},
-            //       )
-            //     ],
-            //   ),
-            // ),
+              child: RaisedButton(
+                color: Colors.blue,
+                child: Text('Add to Cart'),
+                onPressed: () {},
+              ),
+            ),
           ],
         ),
       ),
