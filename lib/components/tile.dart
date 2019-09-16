@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/details.dart';
+import '../pages/query.dart';
 
 class Tile extends StatelessWidget {
   const Tile({Key key, this.name, this.image}) : super(key: key);
@@ -48,7 +49,7 @@ class Tile extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details()),
+          MaterialPageRoute(builder: (context) => Query(name: name,)),
         );
       },
       padding: EdgeInsets.only(right: 10.0),
