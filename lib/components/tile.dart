@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../pages/details.dart';
 import '../pages/query.dart';
 
 class Tile extends StatelessWidget {
@@ -49,7 +48,7 @@ class Tile extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Query(name: name,)),
+          MaterialPageRoute(builder: (context) => QueryFilter(name: name,)),
         );
       },
       padding: EdgeInsets.only(right: 10.0),

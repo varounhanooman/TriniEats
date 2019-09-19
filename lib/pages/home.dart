@@ -7,6 +7,7 @@ import '../components/product.dart';
 
 import './login.dart';
 import './map.dart';
+import './query.dart';
 // import 'package:flutter/foundation.dart';
 
 class Home extends StatelessWidget {
@@ -67,8 +68,18 @@ class Home extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: TextFormField(
+                                  autocorrect: true,
+                                  onChanged: (text) {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => QueryFilter(
+                                    //             name: text,
+                                    //           )),
+                                    // );
+                                  },
                                   decoration: InputDecoration(
-                                      fillColor: Colors.grey,
+                                      fillColor: Colors.white,
                                       filled: true,
                                       border: InputBorder.none,
                                       labelText:
@@ -102,7 +113,7 @@ class Home extends StatelessWidget {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
                       .collection("Category")
-                      // .where("Display", isEqualTo: "true")
+                      // .where('Display', isEqualTo: true)
                       .orderBy("Order")
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -157,28 +168,10 @@ class Home extends StatelessWidget {
                       (context, index) {
                         return Column(
                           children: <Widget>[
-                            //Trying to get subcollection
-
-                            // StreamBuilder<QuerySnapshot>(
-                            //   stream: Firestore.instance.collection('menu').snapshots(),
-                            //   builder: (context,snapshot){
-                            //     if(!snapshot.hasData){
-                            //       print('No data');
-                            //     }
-                            //     // else{
-                            //     //   print(snapshot.data.documents[index]['title']);
-                            //     // }
-                            //     print(snapshot.connectionState);
-                            //     return (Text('\$${snapshot.data.documents[0]}'));
-                            //   },
-
-                            // // ),
-                            // StreamBuilder<QuerySnapshot>(
-                            //   stream: ,
-                            // ),
                             Product(
                               title: snapshot.data.documents[index]['Name'],
-                              docId: snapshot.data.documents[index].documentID.toString(),
+                              docId: snapshot.data.documents[index].documentID
+                                  .toString(),
                               image: FadeInImage.assetNetwork(
                                 fadeInCurve: Curves.easeIn,
                                 placeholder: 'assets/placeholder.png',
@@ -194,29 +187,6 @@ class Home extends StatelessWidget {
                     ));
                   }),
             ),
-            // SliverToBoxAdapter(
-            //   child: Container(
-            //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
-            //     child: Row(
-            //       children: <Widget>[
-            //         Icon(
-            //           Icons.cake,
-            //           size: 30.0,
-            //         ),
-            //         Container(
-            //           child: Align(
-            //             alignment: Alignment.centerLeft,
-            //             child: Text(
-            //               'Eats',
-            //               style: TextStyle(
-            //                   fontWeight: FontWeight.bold, fontSize: 30.0),
-            //             ),
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ));
   }
