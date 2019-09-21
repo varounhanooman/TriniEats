@@ -127,7 +127,7 @@ class _HomeState extends State<Home> {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
                       .collection("Category")
-                      // .where('Display', isEqualTo: true)
+                      .where('Display', isEqualTo: true)
                       .orderBy("Order")
                       .snapshots(),
                   builder: (context, snapshot) {
