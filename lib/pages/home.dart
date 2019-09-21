@@ -10,8 +10,22 @@ import './map.dart';
 import './query.dart';
 // import 'package:flutter/foundation.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key key}) : super(key: key);
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  // const Home({Key key}) : super(key: key);
+
+  final textController = TextEditingController();
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,15 +82,15 @@ class Home extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: TextFormField(
+                                  controller: textController,
                                   autocorrect: true,
-                                  onChanged: (text) {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) => QueryFilter(
-                                    //             name: text,
-                                    //           )),
-                                    // );
+                                  onEditingComplete: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => QueryFilter(
+                                              name: textController.text)),
+                                    );
                                   },
                                   decoration: InputDecoration(
                                       fillColor: Colors.white,
