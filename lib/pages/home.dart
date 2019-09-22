@@ -121,29 +121,6 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            // SliverToBoxAdapter(
-            //   child: Container(
-            //     height: 120,
-            //     child: StreamBuilder<QuerySnapshot>(
-            //       stream: Firestore.instance
-            //           .collection("Category")
-            //           .where('Display', isEqualTo: true)
-            //           .orderBy("Order")
-            //           .snapshots(),
-            //       builder: (context, snapshot) {
-            //         if (!snapshot.hasData)
-            //           return Center(child: CircularProgressIndicator());
-            //         return Padding(
-            //           padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-            //           child: ListView(
-            //             scrollDirection: Axis.horizontal,
-            //             children: categoryFirestore(snapshot),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
             SliverToBoxAdapter(
               child: Container(
                 padding: EdgeInsets.all(15.0),
