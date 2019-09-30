@@ -1,42 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Maps extends StatefulWidget {
-  @override
+  Maps({Key key}) : super(key: key);
+
   _MapsState createState() => _MapsState();
 }
 
 class _MapsState extends State<Maps> {
-  GoogleMapController mapController;
+  Completer<GoogleMapController> _controller = Completer();
 
-  final LatLng _center = const LatLng(10.6918, -61.2225);
-
+  static const LatLng _center = const LatLng(45.521563, -122.677433);
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    _controller.complete(controller);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-          title: Text(
-            'Maps',
-            style: TextStyle(fontSize: 30.0),
-            textAlign: TextAlign.start,
-          ),
-        ),
-        body: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 8.0,
-          ),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Map'),
+      ),
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(target: _center, zoom: 11.0),
       ),
     );
   }
