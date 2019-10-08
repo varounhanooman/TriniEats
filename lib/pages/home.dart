@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../components/tile.dart';
 import '../components/product.dart';
@@ -19,11 +20,20 @@ class _HomeState extends State<Home> {
   // const Home({Key key}) : super(key: key);
 
   final textController = TextEditingController();
+  Position userLocation;
 
   @override
   void dispose() {
     textController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getPosition().then((position) {
+      userLocation = position;
+    });
   }
 
   @override
@@ -109,7 +119,9 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Maps()),
+                                      builder: (context) => Maps(
+                                            userLoc: userLocation,
+                                          )),
                                 );
                               },
                             ),
@@ -134,7 +146,8 @@ class _HomeState extends State<Home> {
                   builder: (context, snapshot) {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.hasData ? snapshot.data.documents.length : 0,
+                      itemCount:
+                          snapshot.hasData ? snapshot.data.documents.length : 0,
                       itemBuilder: (context, index) {
                         if (!snapshot.hasData)
                           return Center(child: CircularProgressIndicator());
@@ -226,5 +239,16 @@ class _HomeState extends State<Home> {
               ),
             ))
         .toList();
+  }
+
+  Future<Position> _getPosition() async {
+    var currentLocation;
+    try {
+      currentLocation = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    } catch (e) {
+      currentLocation = null;
+    }
+    return currentLocation;
   }
 }
