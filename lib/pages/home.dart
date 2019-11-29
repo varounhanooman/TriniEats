@@ -7,8 +7,9 @@ import '../components/tile.dart';
 import '../components/product.dart';
 
 import './login.dart';
-import './map.dart';
+// import './map.dart';
 import './query.dart';
+import './cart.dart';
 // import 'package:flutter/foundation.dart';
 
 class Home extends StatefulWidget {
@@ -45,6 +46,17 @@ class _HomeState extends State<Home> {
             style: TextStyle(fontSize: 30.0),
             textAlign: TextAlign.start,
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Cart()),
+                );
+              },
+            )
+          ],
         ),
         body: CustomScrollView(
           slivers: <Widget>[
@@ -116,13 +128,13 @@ class _HomeState extends State<Home> {
                               icon: Icon(Icons.pin_drop),
                               iconSize: 30.0,
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Maps(
-                                            userLoc: userLocation,
-                                          )),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) => Maps(
+                                //             userLoc: userLocation,
+                                //           )),
+                                // );
                               },
                             ),
                           ],
