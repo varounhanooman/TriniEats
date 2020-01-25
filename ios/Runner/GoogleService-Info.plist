@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>503152023470-9qp01jnejtjih1pgisj7e4lop958e0r0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.503152023470-9qp01jnejtjih1pgisj7e4lop958e0r0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>503152023470-4sclhp02lf3jqlp98gb9oic7hqgvsdts.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDBwofrxE2oTnujo-2HhITlNlUhWnFVvqQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>503152023470</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.trini-eats-ios</string>
+	<key>PROJECT_ID</key>
+	<string>trini-eats</string>
+	<key>STORAGE_BUCKET</key>
+	<string>trini-eats.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:503152023470:ios:40b9e6c307ab2f6473da3f</string>
+	<key>DATABASE_URL</key>
+	<string>https://trini-eats.firebaseio.com</string>
+</dict>
+</plist>

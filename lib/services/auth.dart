@@ -5,28 +5,20 @@ import 'package:trini_eats/screens/home.dart';
 import 'package:trini_eats/screens/login.dart';
 import 'package:trini_eats/bloc/auth_bloc.dart';
 
-
 class Auth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthBloc.instance(),
-      child: Consumer(
-        builder: (context, AuthBloc auth, _) {
-          // return Login();
-          switch (auth.status) {
-            case Status.Uninitialized:
-              return Splash();
-            case Status.Unauthenticated:
-            case Status.Authenticating:
-              return Login();
-            case Status.Authenticated:
-              return Home();
-          }
-          return Splash();
-        },
-      ),
-    );
+    final auth = Provider.of<AuthBloc>(context);
+    switch (auth.status) {
+      case Status.Uninitialized:
+        return Splash();
+      case Status.Unauthenticated:
+      case Status.Authenticating:
+        return Login();
+      case Status.Authenticated:
+        return Home();
+    }
+    return Splash();
   }
 }
 

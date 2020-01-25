@@ -29,7 +29,9 @@ class AuthBloc with ChangeNotifier {
     }
   }
 
-  Future signOut() async {
+  Future signOut(context) async {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     _auth.signOut();
     _status = Status.Unauthenticated;
     notifyListeners();
