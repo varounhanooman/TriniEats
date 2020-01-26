@@ -9,6 +9,7 @@ class AuthBloc with ChangeNotifier {
   Status _status = Status.Uninitialized;
 
   AuthBloc.instance() : _auth = FirebaseAuth.instance {
+    print("here");
     _auth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
 

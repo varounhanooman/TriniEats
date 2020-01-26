@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:trini_eats/screens/cart.dart';
+import 'package:trini_eats/screens/menu.dart';
 import 'package:trini_eats/screens/user.dart';
 import 'package:trini_eats/services/auth.dart';
-
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => Auth());
-      // case '/route_overview':
-      //   // pass parameters to route
-      //   var data = settings.arguments as SingleRoute;
-      //   return MaterialPageRoute(builder: (_) => RouteOverview(data));
+      case '/menu':
+        // pass parameters to route
+        var data = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => Menu(
+                  data,
+                ));
       case '/cart':
         return MaterialPageRoute(builder: (_) => Cart());
       case '/user':

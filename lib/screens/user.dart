@@ -12,18 +12,24 @@ class User extends StatelessWidget {
     FirebaseUser user = auth.user;
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.email),
+        title: Text('Profile'),
       ),
-      body: Column(
-        children: <Widget>[
-          Text(user.uid),
-          RaisedButton(
-            child: Text('Sign Out'),
-            onPressed: () {
-              auth.signOut(context);
-            },
-          )
-        ],
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 20.0,),
+            Text(user.email),
+            Text(user.uid),
+            RaisedButton(
+              child: Text('Sign Out'),
+              onPressed: () {
+                auth.signOut(context);
+              },
+            )
+          ],
+        ),
       ),
     );
   }

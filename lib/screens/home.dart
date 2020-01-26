@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:trini_eats/bloc/merchant_bloc.dart';
+import 'package:trini_eats/models/merchant.dart';
+import 'package:trini_eats/widgets/product.dart';
+import 'package:badges/badges.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  Future _getMerchants;
+
   Widget _searchField() {
     return Container(
       child: TextFormField(
@@ -21,14 +31,20 @@ class Home extends StatelessWidget {
     );
   }
 
-  SliverAppBar _topHeader(context) {
+  SliverAppBar _topHeader(context, cartLength) {
     return SliverAppBar(
       floating: true,
       pinned: true,
       snap: true,
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.shopping_cart),
+          icon: Badge(
+            badgeContent: Text(
+             cartLength.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            child: Icon(Icons.shopping_cart),
+          ),
           onPressed: () {
             Navigator.pushNamed(context, '/cart');
             // x.signOut();
@@ -92,30 +108,59 @@ class Home extends StatelessWidget {
     );
   }
 
-  List _buildList(int count) {
-    List<Widget> listItems = List();
+  @override
+  void initState() {
+    super.initState();
+    _getMerchants = Future.microtask(() =>
+        Provider.of<MerchantBloc>(context, listen: false).getMerchantData());
+  }
 
-    for (int i = 0; i < count; i++) {
-      listItems.add(new Padding(
-          padding: new EdgeInsets.all(20.0),
-          child: new Text('Item ${i.toString()}',
-              style: new TextStyle(fontSize: 18.0))));
-    }
-
-    return listItems;
+  Widget _merchantList(Merchants merchants) {
+    return SliverList(
+      delegate: new SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return Product(
+            docId: merchants.merchants[index].id,
+            title: merchants.merchants[index].name,
+            image: FadeInImage.assetNetwork(
+              fadeInCurve: Curves.easeIn,
+              placeholder: 'assets/placeholder.png',
+              image: merchants.merchants[index].image,
+              fit: BoxFit.cover,
+            ),
+          );
+          // return ListTile(
+          //   title: Text(merchants.merchants[index].name),
+          // );
+        },
+        childCount: merchants.merchants.length,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    var merchant = Provider.of<MerchantBloc>(context);
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          _topHeader(context),
-          SliverList(
-            delegate: SliverChildListDelegate(_buildList(50)),
-          ),
-        ],
-      ),
-    );
+        body: Center(
+            child: FutureBuilder(
+      future: _getMerchants,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Container(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                _topHeader(context, merchant.cart.length),
+                _merchantList(merchant.allMerchants),
+              ],
+            ),
+          );
+        }
+        if (snapshot.hasError) {
+          return Text('$snapshot.error');
+        }
+        return CircularProgressIndicator();
+      },
+    )));
   }
 }

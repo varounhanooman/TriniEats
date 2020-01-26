@@ -114,6 +114,7 @@ class _LoginState extends State<Login> {
                   .hasMatch(value)) {
             return 'Please enter a valid email';
           }
+          return null;
         },
         onSaved: (String value) {
           _formData['email'] = value;
@@ -138,6 +139,7 @@ class _LoginState extends State<Login> {
           if (value.isEmpty) {
             return 'Password field empty';
           }
+          return null;
         },
         onSaved: (String value) {
           _formData['password'] = value;

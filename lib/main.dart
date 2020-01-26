@@ -4,14 +4,17 @@ import 'package:trini_eats/router.dart';
 
 import 'bloc/_providers.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
-          child: MaterialApp(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Trini Eats',
         theme: ThemeData(
           primarySwatch: Colors.blue,
