@@ -18,7 +18,7 @@ class MenuItems {
   final String image;
   final List items;
   final String name;
-  final String price;
+  final num price;
 
   MenuItems(
       {this.id, this.category, this.image, this.items, this.name, this.price});
@@ -33,6 +33,6 @@ class MenuItems {
         image: data['Image'] ?? '',
         items: itemList,
         name: data['Name'] ?? '',
-        price: data['Price'].toString() ?? '0.00');
+        price: data['Price'] ?? 0);
   }
 }

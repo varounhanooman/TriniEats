@@ -17,6 +17,7 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   Future _getMenu;
   FlutterMoneyFormatter fmf;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -31,14 +32,14 @@ class _MenuState extends State<Menu> {
       delegate: new SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           fmf = FlutterMoneyFormatter(
-              amount: double.parse(menuItems.menuItems[index].price));
+              amount: menuItems.menuItems[index].price.toDouble());
           return Container(
             height: 150,
             child: Card(
               semanticContainer: true,
               child: ListTile(
                 onTap: () {
-                  merchant.setCart(menuItems.menuItems[index].id);
+                  merchant.setCart(menuItems.menuItems[index]);
                 },
                 title: Text(menuItems.menuItems[index].name),
                 leading: FadeInImage.assetNetwork(
@@ -69,45 +70,48 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     var merchant = Provider.of<MerchantBloc>(context);
+    if (merchant.allMenu != null) {
+      setState(() {
+        isLoading = false;
+      });
+    }
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.docID),
-          actions: <Widget>[
-            IconButton(
-              icon: Badge(
-                badgeContent: Text(
-                  merchant.cart.length.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: Icon(Icons.shopping_cart),
+      appBar: AppBar(
+        title: Text(widget.docID),
+        actions: <Widget>[
+          IconButton(
+            icon: Badge(
+              badgeContent: Text(
+                merchant.cart.length.toString(),
+                style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/cart');
-                // x.signOut();
-              },
+              child: Icon(Icons.shopping_cart),
             ),
-          ],
-        ),
-        body: Center(
-            child: FutureBuilder(
-          future: _getMenu,
-          // future: Provider.of<MerchantBloc>(context)
-          //     .getMenuItems(widget.docID),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    _menuList(merchant),
-                  ],
-                ),
-              );
-            }
-            if (snapshot.hasError) {
-              return Text('$snapshot.error');
-            }
-            return CircularProgressIndicator();
-          },
-        )));
+            onPressed: () {
+              Navigator.pushNamed(context, '/cart');
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : FutureBuilder(
+                future: _getMenu,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Container(
+                      child: CustomScrollView(
+                        slivers: <Widget>[
+                          _menuList(merchant),
+                        ],
+                      ),
+                    );
+                  }
+                  return CircularProgressIndicator();
+                },
+              ),
+      ),
+    );
   }
 }

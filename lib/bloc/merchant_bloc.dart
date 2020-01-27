@@ -4,19 +4,30 @@ import 'package:trini_eats/models/merchant.dart';
 import 'package:trini_eats/models/merchantmenu.dart';
 
 class MerchantBloc with ChangeNotifier {
+  bool _isloading = true;
   Firestore _db = Firestore.instance;
   Merchants _allMerchants;
   MerchantMenu _allMenu;
   int _size;
-  List _cart = [];
+  num _cartTotal = 0;
+  List<MenuItems> _cart = [];
 
   int get size => _size;
   Merchants get allMerchants => _allMerchants;
   MerchantMenu get allMenu => _allMenu;
   List get cart => _cart;
+  bool get isLoading => _isloading;
+  num get cartTotal => _cartTotal;
 
   MerchantBloc.instance() {
     getMerchantData();
+  }
+
+  void checkForNull() {
+    if (_allMerchants != null) {
+      _isloading = false;
+    }
+    notifyListeners();
   }
 
   void getMerchantLength() {
@@ -26,11 +37,12 @@ class MerchantBloc with ChangeNotifier {
     });
   }
 
-  getMerchantData() {
+  void getMerchantData() {
+    print('getMerchantData()');
     _db.collection('Merchant').getDocuments().then((ds) {
       _allMerchants = Merchants.fromMap(ds.documents);
       print(_allMerchants.merchants.length);
-      notifyListeners();
+      checkForNull();
     });
   }
 
@@ -49,9 +61,25 @@ class MerchantBloc with ChangeNotifier {
 
   setCart(item) {
     _cart.add(item);
+    _cartTotal = _cartTotal + item.price;
+    print(_cartTotal);
     notifyListeners();
   }
+
+  removeFromCart(item){
+    _cart.remove(item);
+    _cartTotal = _cartTotal - item.price;
+    print(_cartTotal);
+    notifyListeners();
+  }
+
+  // cartTotal() {
+  //   cart.forEach((item) {
+  //     _cartTotal = _cartTotal + item.price;
+  //   });
+  // }
 }
+
 //   // MerchantBloc.instance() {
 //   //   print("get data");
 //   //   // getData();

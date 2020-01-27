@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
         IconButton(
           icon: Badge(
             badgeContent: Text(
-             cartLength.toString(),
+              cartLength.toString(),
               style: TextStyle(color: Colors.white),
             ),
             child: Icon(Icons.shopping_cart),
@@ -111,8 +111,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _getMerchants = Future.microtask(() =>
-        Provider.of<MerchantBloc>(context, listen: false).getMerchantData());
+    // _getMerchants = Future.microtask(() =>
+    // Provider.of<MerchantBloc>(context, listen: false).checkForNull();
   }
 
   Widget _merchantList(Merchants merchants) {
@@ -143,24 +143,29 @@ class _HomeState extends State<Home> {
     var merchant = Provider.of<MerchantBloc>(context);
     return Scaffold(
         body: Center(
-            child: FutureBuilder(
-      future: _getMerchants,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                _topHeader(context, merchant.cart.length),
-                _merchantList(merchant.allMerchants),
-              ],
-            ),
-          );
-        }
-        if (snapshot.hasError) {
-          return Text('$snapshot.error');
-        }
-        return CircularProgressIndicator();
-      },
-    )));
+            // child: FutureBuilder(
+            //     future: _getMerchants,
+            //     builder: (context, snapshot) {
+            //       if (snapshot.connectionState == ConnectionState.done) {
+            // return
+            child: merchant.isLoading == true
+                ? CircularProgressIndicator()
+                : Container(
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        _topHeader(context, merchant.cart.length),
+                        _merchantList(merchant.allMerchants),
+                      ],
+                    ),
+                  ) //;
+            //   }
+            //   if (snapshot.hasError) {
+            //     return Text('$snapshot.error');
+            //   }
+            //   return CircularProgressIndicator();
+            // },
+            )
+        // ),
+        );
   }
 }
