@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:trini_eats/bloc/merchant_bloc.dart';
 import 'package:trini_eats/models/merchantmenu.dart';
@@ -40,6 +41,8 @@ class _MenuState extends State<Menu> {
               child: ListTile(
                 onTap: () {
                   merchant.setCart(menuItems.menuItems[index]);
+                  Fluttertoast.showToast(
+                      msg: menuItems.menuItems[index].name + ' added to cart!');
                 },
                 title: Text(menuItems.menuItems[index].name),
                 leading: FadeInImage.assetNetwork(

@@ -15,7 +15,7 @@ class MerchantBloc with ChangeNotifier {
   int get size => _size;
   Merchants get allMerchants => _allMerchants;
   MerchantMenu get allMenu => _allMenu;
-  List get cart => _cart;
+  List<MenuItems> get cart => _cart;
   bool get isLoading => _isloading;
   num get cartTotal => _cartTotal;
 

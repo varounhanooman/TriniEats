@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trini_eats/screens/cart.dart';
+import 'package:trini_eats/screens/checkout.dart';
 import 'package:trini_eats/screens/menu.dart';
 import 'package:trini_eats/screens/user.dart';
 import 'package:trini_eats/services/auth.dart';
@@ -20,6 +21,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => Cart());
       case '/user':
         return MaterialPageRoute(builder: (_) => User());
+      case '/checkout':
+        return MaterialPageRoute(builder: (_) => Checkout());
       // case '/route_to_work':
       //   return MaterialPageRoute(builder: (_) => RouteToWork());
       default:
