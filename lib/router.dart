@@ -14,15 +14,17 @@ class Router {
         // pass parameters to route
         var data = settings.arguments as String;
         return MaterialPageRoute(
-            builder: (_) => Menu(
-                  data,
-                ));
+          builder: (_) => Menu(
+            data,
+          ),
+        );
       case '/cart':
         return MaterialPageRoute(builder: (_) => Cart());
       case '/user':
         return MaterialPageRoute(builder: (_) => User());
       case '/checkout':
-        return MaterialPageRoute(builder: (_) => Checkout());
+        var merc = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => Checkout(merc,));
       // case '/route_to_work':
       //   return MaterialPageRoute(builder: (_) => RouteToWork());
       default:

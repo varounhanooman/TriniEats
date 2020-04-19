@@ -41,13 +41,11 @@ class _CartState extends State<Cart> {
               groupSeparatorBuilder: (String value) => Padding(
                 padding: const EdgeInsets.all(8.0),
 
-                // TODO: Create checkout button where value = merchant
-                // then create firestore function for each
                 child: RaisedButton(
                   
                   child: Text('Checkout ' + value),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/checkout');
+                    Navigator.pushNamed(context, '/checkout', arguments: value);
                   },
                 ),
               ),

@@ -22,11 +22,19 @@ class MenuItems {
   final String merchant;
 
   MenuItems(
-      {this.id, this.category, this.image, this.items, this.name, this.price, this.merchant});
+      {this.id,
+      this.category,
+      this.image,
+      this.items,
+      this.name,
+      this.price,
+      this.merchant});
 
   factory MenuItems.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     var itemList = data['Items'] ?? [];
+
+    // Map<String, dynamic> toJson() => doc.data;
 
     return MenuItems(
         id: doc.documentID,
@@ -35,7 +43,9 @@ class MenuItems {
         items: itemList,
         name: data['Name'] ?? '',
         price: data['Price'] ?? 0,
-        merchant: data['Merchant'] ?? '')
-        ;
+        merchant: data['Merchant'] ?? '');
   }
+
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'category': category, 'image': image, 'items' : items, 'name': name, 'price': price, 'merchant':merchant};
 }
