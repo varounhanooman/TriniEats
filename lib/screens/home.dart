@@ -4,6 +4,8 @@ import 'package:trini_eats/bloc/merchant_bloc.dart';
 import 'package:trini_eats/models/merchant.dart';
 import 'package:trini_eats/widgets/product.dart';
 import 'package:badges/badges.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -37,6 +39,19 @@ class _HomeState extends State<Home> {
       pinned: true,
       snap: true,
       actions: <Widget>[
+        IconButton(
+          icon: Badge(
+            badgeContent: Text(
+              cartLength.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            child: Icon(Icons.list),
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/orders');
+            // x.signOut();
+          },
+        ),
         IconButton(
           icon: Badge(
             badgeContent: Text(
